@@ -1,0 +1,30 @@
+.side-menu{
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    padding: 2rem;
+    background-color: var(--light-yellow);
+    border-right: 3px solid var(--solid-yellow);
+}
+.nav-item{
+    padding: 2rem;
+    size: 30px;
+    font-family: var(--mono);
+    font-size:20px;
+    /* margin: 1rem; */
+}
+.nav-item:hover{
+    background-color: var(--hover-yellow);
+    /* cursor:pointer; */
+}
+.icon{
+    width: 4rem;
+}
+.icon-container{
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+.separator{
+    border: 2px solid var(--solid-yellow);
+}
