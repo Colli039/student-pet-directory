@@ -3,7 +3,7 @@ import '../css/instructions-page.css'
 function InstructionsPage() {
     return(
         <div className="insructions-body">
-            Instructions here
+            <h1>Midterm Exam Scenario</h1>
         </div>
     )
 }

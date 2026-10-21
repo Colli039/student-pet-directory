@@ -1,4 +1,10 @@
-.counter {
+.main-body{
+  width: 100%;
+  /* background-color: var(--light-green); */
+}
+
+
+/* .counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -181,4 +187,4 @@
     right: 0;
     border-right-color: var(--border);
   }
-}
+} */
