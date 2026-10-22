@@ -1,0 +1,124 @@
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover,
+.clickable-row:focus {
+  background-color: #f0f5ff;
+  outline: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgb(0 0 0 / 50%);
+}
+
+.pet-modal {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 20%);
+}
+
+.pet-modal h2 {
+  margin-top: 0;
+  padding-right: 25px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: none;
+  background: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.pet-modal-image {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.pet-details {
+  margin: 20px 0;
+}
+
+.pet-details p {
+  margin: 12px 0;
+}
+
+.modal-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #1256c4;
+  color: white;
+  cursor: pointer;
+}
+.pet-modal label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.pet-modal input,
+.pet-modal select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.modal-button {
+  background: #1256c4;
+  color: white;
+}
+
+.modal-secondary {
+  background: #eee;
+  color: #333;
+}
+
+.modal-delete {
+  background: #dc3545;
+  color: white;
+}
+
+.modal-actions button:hover {
+  filter: brightness(0.94);
+}

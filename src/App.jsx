@@ -14,8 +14,8 @@ function App () {
       <main className='main-body'>
         <Routes>
           <Route path='/login' element={<LoginPage />} />
-          <Route path='/' element={<InstructionsPage />} />
-          <Route path='/manage' element={<PetManagementPage />} />
+          <Route path='/instructions' element={<InstructionsPage />} />
+          <Route path='/' element={<PetManagementPage />} />
           <Route path='/rankings' element={<PetRankingsPage />} />
         </Routes>
       </main>
