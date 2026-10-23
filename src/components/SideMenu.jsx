@@ -11,8 +11,6 @@ function SideMenu() {
             </div>
             <div className="button nav-item">Instructions</div>
             <div className="separator"></div>
-            <div className="button nav-item">Pet Rankings</div>
-            <div className="separator"></div>
             <div className="button nav-item">Pet Table</div>
         </nav>
     )
