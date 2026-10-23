@@ -26,6 +26,16 @@ const columns = [
   { accessorKey: 'likes', header: 'Likes' }
 ]
 
+// The table belongs to one user, set at build time from USER_NAME in the EC2 user data
+// (written to VITE_USER_NAME). There is no prompt and no way to switch users in the app.
+// This only filters what the table shows; it is not security.
+const rawName = String(import.meta.env.VITE_USER_NAME ?? '').trim()
+const USER_NAME = rawName === 'PASTE_YOUR_NAME_HERE' ? '' : rawName
+
+// "maria cruz " and "Maria Cruz" count as the same person
+const sameName = (a, b) =>
+  String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase()
+
 export default function PetTable () {
   const [pets, setPets] = useState([])
   const [selectedPet, setSelectedPet] = useState(null)
@@ -60,9 +70,11 @@ export default function PetTable () {
         previous.map(pet => (pet.id === saved.id ? saved : pet))
       )
       setSelectedPet(saved)
+      return true
     } catch (error) {
       console.error(error)
       alert('Could not save your changes. Please try again.')
+      return false
     }
   }
 
@@ -88,13 +100,24 @@ export default function PetTable () {
     }
   }
 
+  // Only this user's entries go into the table.
+  const myPets = pets.filter(pet => sameName(pet.registeredBy, USER_NAME))
+
   const table = useTable({
     features,
     columns,
-    data: pets,
+    data: myPets,
     initialState: { sorting: [{ id: 'likes', desc: true }] }
   })
 
+  if (!USER_NAME) {
+    return (
+      <p>
+        This app has no user name configured. Set USER_NAME in the EC2 user data
+        (or VITE_USER_NAME in a local .env file) and rebuild.
+      </p>
+    )
+  }
   if (status === 'loading') return <p>Loading pets…</p>
   if (status === 'error') {
     return <p>Could not load pets. Check the API URL and the Lambda CORS settings.</p>
@@ -103,7 +126,12 @@ export default function PetTable () {
   return (
     <>
       <div className='table-toolbar'>
-        <h2>Registered Pets</h2>
+        <div>
+          <h2>My Pets</h2>
+          <p>
+            Showing pets registered by <strong>{USER_NAME}</strong>
+          </p>
+        </div>
 
         <button
           type='button'
@@ -152,7 +180,7 @@ export default function PetTable () {
         </tbody>
       </table>
 
-      {pets.length === 0 && <p>No pets registered yet.</p>}
+      {myPets.length === 0 && <p>No pets registered under {USER_NAME} yet.</p>}
 
       <PetDetailsModal
         pet={selectedPet}
@@ -162,6 +190,7 @@ export default function PetTable () {
       />
       {isAddModalOpen && (
         <AddPetModal
+          registeredBy={USER_NAME}
           onClose={() => setIsAddModalOpen(false)}
           onAdd={handleAddPet}
         />

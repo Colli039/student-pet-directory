@@ -1,0 +1,13 @@
+.insructions-body{
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: center;
+}
+.snippet{
+    width: 45%;
+    margin: 1rem 0 2rem 0;
+}
+.bold{
+    font-weight: 600;
+}

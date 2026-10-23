@@ -16,7 +16,7 @@ th {
 }
 
 tbody tr:hover {
-  background-color: #fafafa;
+  background-color: var(--light-yellow);
 }
 .table-toolbar {
   display: flex;
@@ -34,12 +34,12 @@ tbody tr:hover {
   padding: 10px 16px;
   border: none;
   border-radius: 8px;
-  background: #1256c4;
+  background: #f1d565;
   color: white;
   font-weight: 600;
   cursor: pointer;
 }
 
 .add-pet-button:hover {
-  background: #0d449e;
+  background: var(--solid-yellow);
 }
