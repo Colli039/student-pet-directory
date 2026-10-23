@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import ImageDropzone from './ImageDropZone'
 import '../css/pets-modal.css'
 
 const animalTypes = [
@@ -15,11 +16,14 @@ const animalTypes = [
 
 export default function PetDetailsModal({
   pet,
+  canModify = true,
   onClose,
   onSave,
   onDelete,
 }) {
   const [isEditing, setIsEditing] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({})
 
   useEffect(() => {
@@ -40,15 +44,23 @@ export default function PetDetailsModal({
     }))
   }
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault()
-    onSave({
-      ...formData,
-      petName: formData.petName.trim(),
-      owner: formData.owner.trim(),
-      registeredBy: formData.registeredBy.trim(),
-    })
-    setIsEditing(false)
+    if (isUploading || isSaving) return
+
+    setIsSaving(true)
+    try {
+      // onSave resolves to true when the backend accepted the change
+      const saved = await onSave({
+        ...formData,
+        petName: formData.petName.trim(),
+        owner: formData.owner.trim(),
+        registeredBy: pet.registeredBy, // locked: cannot be changed by editing
+      })
+      if (saved) setIsEditing(false)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleDelete = () => {
@@ -102,13 +114,12 @@ export default function PetDetailsModal({
                 required
               />
 
-              <label htmlFor="registeredBy">Registered By</label>
+              <label htmlFor="registeredBy">Registered By (locked)</label>
               <input
                 id="registeredBy"
                 name="registeredBy"
-                value={formData.registeredBy ?? ''}
-                onChange={handleChange}
-                required
+                value={pet.registeredBy ?? ''}
+                disabled
               />
 
               <label htmlFor="animalType">Animal Type</label>
@@ -126,19 +137,22 @@ export default function PetDetailsModal({
                 ))}
               </select>
 
-              <label htmlFor="petPicture">Pet Picture URL</label>
-              <input
-                id="petPicture"
-                name="petPicture"
-                type="url"
+              <label>Pet Picture</label>
+              <ImageDropzone
                 value={formData.petPicture ?? ''}
-                onChange={handleChange}
-                placeholder="https://example.com/pet.jpg"
+                onChange={(url) =>
+                  setFormData((previous) => ({ ...previous, petPicture: url }))
+                }
+                onBusyChange={setIsUploading}
               />
 
               <div className="modal-actions">
-                <button type="submit" className="modal-button">
-                  Save Changes
+                <button
+                  type="submit"
+                  className="modal-button"
+                  disabled={isUploading || isSaving}
+                >
+                  {isSaving ? 'Saving…' : 'Save Changes'}
                 </button>
 
                 <button
@@ -173,23 +187,25 @@ export default function PetDetailsModal({
               <p><strong>Likes:</strong> {pet.likes ?? 0}</p>
             </div>
 
-            <div className="modal-actions">
-              <button
-                type="button"
-                className="modal-button"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit
-              </button>
+            {canModify && (
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="modal-button"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit
+                </button>
 
-              <button
-                type="button"
-                className="modal-delete"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
-            </div>
+                <button
+                  type="button"
+                  className="modal-delete"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>

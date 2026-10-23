@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ImageDropzone from './ImageDropZone'
 import '../css/pets-modal.css'
 
 const initialForm = {
@@ -22,8 +23,10 @@ const animalTypes = [
   'Other'
 ]
 
-export default function AddPetModal ({ onClose, onAdd }) {
-  const [formData, setFormData] = useState(initialForm)
+export default function AddPetModal ({ registeredBy = '', onClose, onAdd }) {
+  const [formData, setFormData] = useState({ ...initialForm, registeredBy })
+  const [isUploading, setIsUploading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -34,16 +37,23 @@ export default function AddPetModal ({ onClose, onAdd }) {
     }))
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
+    if (isUploading || isSaving) return
 
-    onAdd({
-      ...formData,
-      petName: formData.petName.trim(),
-      owner: formData.owner.trim(),
-      registeredBy: formData.registeredBy.trim(),
-      likes: 0
-    })
+    setIsSaving(true)
+    try {
+      await onAdd({
+        ...formData,
+        petName: formData.petName.trim(),
+        owner: formData.owner.trim(),
+        // always the configured user, whatever is in the form
+        registeredBy: registeredBy || formData.registeredBy.trim(),
+        likes: 0
+      })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -87,13 +97,14 @@ export default function AddPetModal ({ onClose, onAdd }) {
             required
           />
 
-          <label htmlFor='new-pet-registrar'>Registered By</label>
+          <label htmlFor='new-pet-registrar'>Registered By (locked)</label>
           <input
             id='new-pet-registrar'
             name='registeredBy'
             value={formData.registeredBy}
             onChange={handleChange}
             placeholder='Enter employee name'
+            disabled={Boolean(registeredBy)}
             required
           />
 
@@ -112,33 +123,21 @@ export default function AddPetModal ({ onClose, onAdd }) {
             ))}
           </select>
 
-          <label htmlFor='new-pet-picture'>Pet Picture URL</label>
-          <input
-            id='new-pet-picture'
-            name='petPicture'
-            type='url'
+          <label>Pet Picture</label>
+          <ImageDropzone
             value={formData.petPicture}
-            onChange={handleChange}
-            placeholder='https://example.com/pet.jpg'
+            onChange={url =>
+              setFormData(previous => ({ ...previous, petPicture: url }))}
+            onBusyChange={setIsUploading}
           />
 
-          {formData.petPicture && (
-            <img
-              src={formData.petPicture}
-              alt='Pet preview'
-              className='pet-modal-image'
-              onError={e => {
-                e.currentTarget.style.display = 'none'
-              }}
-              onLoad={e => {
-                e.currentTarget.style.display = 'block'
-              }}
-            />
-          )}
-
           <div className='modal-actions'>
-            <button type='submit' className='modal-button'>
-              Add Pet
+            <button
+              type='submit'
+              className='modal-button'
+              disabled={isUploading || isSaving}
+            >
+              {isSaving ? 'Adding…' : 'Add Pet'}
             </button>
 
             <button type='button' className='modal-secondary' onClick={onClose}>

@@ -1,0 +1,58 @@
+.dropzone-field {
+  margin-bottom: 12px;
+}
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 12px;
+  border: 2px dashed #b8bccb;
+  border-radius: 10px;
+  background: #f7f8fc;
+  color: #5b6172;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dropzone:hover,
+.dropzone:focus-visible,
+.dropzone-active {
+  border-color: var(--hover-yellow);
+  background: var(--light-yellow);
+  outline: none;
+}
+
+.dropzone[aria-busy='true'] {
+  cursor: progress;
+}
+
+.dropzone p {
+  margin: 0;
+}
+
+.dropzone-preview {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.dropzone-remove {
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #4f46e5;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.dropzone-error {
+  margin: 8px 0 0;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
